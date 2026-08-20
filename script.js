@@ -1,4 +1,6 @@
-/* Custom Cursor Logic */
+/* ==========================================
+   1. CUSTOM CURSOR LOGIC
+   ========================================== */
 const cursorDot = document.getElementById('cursorDot');
 const cursorOutline = document.getElementById('cursorOutline');
 
@@ -15,6 +17,7 @@ window.addEventListener('mousemove', (e) => {
   }, { duration: 150, fill: 'forwards' });
 });
 
+// Expand custom cursor over interactive elements
 const addCursorHover = () => {
   document.querySelectorAll('.interactive, button, input, a').forEach(element => {
     element.addEventListener('mouseenter', () => document.body.classList.add('hovered'));
@@ -23,28 +26,58 @@ const addCursorHover = () => {
 };
 addCursorHover();
 
-/* Role Switching */
+/* ==========================================
+   2. ROLE SWITCHING & AUTHENTICATION
+   ========================================== */
 let currentRole = 'Admin';
+
+// Default test credentials for demo
+const MOCK_CREDENTIALS = {
+  Admin: { user: 'admin@school.com', pass: 'admin123' },
+  Teacher: { user: 'teacher@school.com', pass: 'teacher123' },
+  Student: { user: 'student@school.com', pass: 'student123' },
+  Driver: { user: 'driver@school.com', pass: 'driver123' }
+};
 
 function switchRole(role) {
   currentRole = role;
   
+  // Highlight active tab
   const tabs = document.querySelectorAll('.tab-btn');
   tabs.forEach(tab => {
     tab.classList.toggle('active', tab.innerText.includes(role));
   });
 
+  // Update form placeholders & labels
   document.getElementById('userLabel').innerText = `${role} Username / Email`;
   document.getElementById('loginBtn').innerText = `Login as ${role}`;
 }
 
 function handleLogin(e) {
   e.preventDefault();
-  const user = document.getElementById('username').value;
-  alert(`Logging in as ${currentRole}: ${user}`);
+  const inputUser = document.getElementById('username').value.trim();
+  const inputPass = document.getElementById('password').value.trim();
+  const expected = MOCK_CREDENTIALS[currentRole];
+
+  if (currentRole === 'Admin') {
+    if (inputUser === expected.user && inputPass === expected.pass) {
+      alert('Access Granted! Welcome to Admin Dashboard.');
+    } else {
+      alert(`Invalid Admin Credentials!\n\nUse Test Admin Login:\nEmail: ${expected.user}\nPassword: ${expected.pass}`);
+    }
+  } else {
+    // Flexible validation for other roles
+    if (inputUser === expected.user && inputPass === expected.pass) {
+      alert(`Access Granted! Welcome to ${currentRole} Portal.`);
+    } else {
+      alert(`Login Failed!\n\nTry Demo ${currentRole} Credentials:\nEmail: ${expected.user}\nPassword: ${expected.pass}`);
+    }
+  }
 }
 
-/* Student Directory Search */
+/* ==========================================
+   3. STUDENT DIRECTORY SEARCH
+   ========================================== */
 const studentData = [
   {
     name: "Alex Johnson",
@@ -84,7 +117,7 @@ function searchStudent() {
         </div>
       </div>
     `;
-    addCursorHover();
+    addCursorHover(); // Re-apply cursor hover triggers to newly created DOM nodes
   } else {
     resultContainer.innerHTML = `
       <div class="not-found">No student found matching "${query}"</div>
