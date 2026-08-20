@@ -12,11 +12,12 @@
   <div class="cursor-dot" id="cursorDot"></div>
   <div class="cursor-outline" id="cursorOutline"></div>
 
-  <!-- Background Glows -->
+  <!-- Background Glow Effects -->
   <div class="bg-glow glow-1"></div>
   <div class="bg-glow glow-2"></div>
 
   <div class="container">
+    <!-- Header with School Logo Placeholder -->
     <div class="header">
       <div class="logo-placeholder interactive" title="Upload School Logo">
         <span>SCHOOL<br/>LOGO</span>
@@ -25,7 +26,7 @@
       <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Management & Learning Portal</p>
     </div>
 
-    <!-- Role Tabs -->
+    <!-- Role Selection Tabs -->
     <div class="role-tabs">
       <button class="tab-btn active interactive" onclick="switchRole('Admin')">Admin</button>
       <button class="tab-btn interactive" onclick="switchRole('Teacher')">Teacher</button>
@@ -33,8 +34,8 @@
       <button class="tab-btn interactive" onclick="switchRole('Driver')">Driver</button>
     </div>
 
-    <!-- Login Form -->
-    <form id="loginForm" onsubmit="handleLogin(event)">
+    <!-- Login & Self-Registration Form -->
+    <form id="loginForm" onsubmit="handleFormSubmit(event)">
       <div class="form-group">
         <label id="userLabel" for="username">Admin Username / Email</label>
         <input type="text" class="interactive" id="username" placeholder="Enter credentials" required />
@@ -43,10 +44,39 @@
         <label for="password">Password</label>
         <input type="password" class="interactive" id="password" placeholder="••••••••" required />
       </div>
+      
       <button type="submit" class="submit-btn interactive" id="loginBtn">Login as Admin</button>
+
+      <!-- Toggle link for Student Self-Registration -->
+      <p id="toggleAuth" onclick="toggleStudentRegister()" class="interactive" style="display:none; font-size:0.75rem; text-align:center; margin-top:10px; color:var(--accent); cursor:pointer;">
+        New Student? Register Here
+      </p>
     </form>
 
-    <!-- Student Search -->
+    <!-- Admin Control Panel (Staff Creation & Student Approvals) -->
+    <div id="adminDashboard" style="display:none; margin-top:1.5rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.1);">
+      <h3 style="font-size: 0.95rem; color: var(--accent);">Admin Management Panel</h3>
+      
+      <!-- Add Teacher / Driver Section -->
+      <div style="margin-top: 1rem;">
+        <h4 style="font-size: 0.8rem; margin-bottom: 6px;">Add Teacher / Driver Credentials</h4>
+        <select id="staffRole" class="interactive" style="width:100%; padding:8px; margin-bottom:6px; background:rgba(15, 23, 42, 0.8); color:#fff; border:1px solid rgba(255, 255, 255, 0.1); border-radius:8px;">
+          <option value="Teacher">Teacher</option>
+          <option value="Driver">Driver</option>
+        </select>
+        <input type="email" id="staffEmail" placeholder="Staff Email" class="interactive" style="margin-bottom:6px;" />
+        <input type="password" id="staffPass" placeholder="Staff Password" class="interactive" style="margin-bottom:8px;" />
+        <button type="button" onclick="adminCreateStaff(document.getElementById('staffRole').value, document.getElementById('staffEmail').value, document.getElementById('staffPass').value)" class="submit-btn interactive" style="padding:8px; font-size:0.8rem;">Add Staff Member</button>
+      </div>
+
+      <!-- Student Approval Queue -->
+      <div style="margin-top: 1.5rem;">
+        <h4 style="font-size: 0.8rem;">Pending Student Approvals</h4>
+        <div id="pendingList" style="margin-top: 6px;"></div>
+      </div>
+    </div>
+
+    <!-- Student Directory Search Module -->
     <div class="search-section">
       <h3 style="font-size: 0.95rem;">Student Directory Search</h3>
       <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem;">
