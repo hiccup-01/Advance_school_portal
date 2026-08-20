@@ -54,6 +54,12 @@ function switchRole(role) {
     tab.classList.toggle('active', tab.innerText.includes(role));
   });
 
+  // Hide admin dashboard when leaving admin tab
+  const adminModal = document.getElementById('adminDashboard');
+  if (adminModal && role !== 'Admin') {
+    adminModal.style.display = 'none';
+  }
+
   updateFormView();
 }
 
@@ -86,16 +92,16 @@ function toggleStudentRegister() {
   updateFormView();
 }
 
-// Login & Student Self-Registration Handler
+// Global function used in both handleLogin and handleFormSubmit for compatibility
 function handleFormSubmit(e) {
-  e.preventDefault();
+  if (e) e.preventDefault();
   const inputUser = document.getElementById('username').value.trim();
   const inputPass = document.getElementById('password').value.trim();
 
   // 1. Admin Login
   if (currentRole === 'Admin') {
     if (inputUser === MASTER_ADMIN.user && inputPass === MASTER_ADMIN.pass) {
-      alert('Access Granted! Opening Admin Control Panel.');
+      alert('Access Granted! Opening Admin Management Panel.');
       showAdminDashboard();
     } else {
       alert('Invalid Admin Credentials!\nEmail: admin@school.com\nPassword: admin123');
@@ -115,7 +121,7 @@ function handleFormSubmit(e) {
       role: 'Student',
       user: inputUser,
       pass: inputPass,
-      status: 'pending' // Pending Admin Approval
+      status: 'pending'
     });
 
     alert('Registration submitted successfully!\nYour account is now PENDING Admin approval.');
@@ -141,23 +147,29 @@ function handleFormSubmit(e) {
   alert(`Access Granted! Welcome to ${currentRole} Portal.`);
 }
 
+// Fallback alias in case your HTML form calls handleLogin(event)
+function handleLogin(e) {
+  handleFormSubmit(e);
+}
+
 /* ==========================================
    3. ADMIN MANAGEMENT FUNCTIONS
    ========================================== */
 
-// Admin manual account creation for Teachers & Drivers
 function adminCreateStaff(role, email, password) {
-  if (role !== 'Teacher' && role !== 'Driver') {
-    alert('Admin can only create Teacher or Driver accounts directly.');
+  if (!email || !password) {
+    alert('Please enter both Email and Password for the staff member.');
     return;
   }
 
   usersDB.push({ role, user: email, pass: password, status: 'approved' });
   alert(`Account successfully created for ${role}: ${email}`);
+  
+  document.getElementById('staffEmail').value = '';
+  document.getElementById('staffPass').value = '';
   renderPendingStudents();
 }
 
-// Admin approves a pending student
 function approveStudent(email) {
   const student = usersDB.find(u => u.role === 'Student' && u.user === email);
   if (student) {
@@ -167,7 +179,6 @@ function approveStudent(email) {
   }
 }
 
-// Render Admin Control Dashboard UI
 function showAdminDashboard() {
   const adminModal = document.getElementById('adminDashboard');
   if (adminModal) {
@@ -188,7 +199,7 @@ function renderPendingStudents() {
   }
 
   pendingList.innerHTML = pendingStudents.map(s => `
-    <div style="display:flex; justify-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; margin-top:6px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; margin-top:6px;">
       <span style="font-size:0.8rem;">${s.user}</span>
       <button onclick="approveStudent('${s.user}')" class="interactive" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:0.75rem;">Approve</button>
     </div>
