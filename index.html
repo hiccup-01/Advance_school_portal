@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart School Portal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Custom Mouse Cursor Elements -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-outline" id="cursorOutline"></div>
+
+  <!-- Background Glows -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <div class="container">
+    <div class="header">
+      <div class="logo-placeholder interactive" title="Upload School Logo">
+        <span>SCHOOL<br/>LOGO</span>
+      </div>
+      <h2>Smart Academy</h2>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Management & Learning Portal</p>
+    </div>
+
+    <!-- Role Tabs -->
+    <div class="role-tabs">
+      <button class="tab-btn active interactive" onclick="switchRole('Admin')">Admin</button>
+      <button class="tab-btn interactive" onclick="switchRole('Teacher')">Teacher</button>
+      <button class="tab-btn interactive" onclick="switchRole('Student')">Student</button>
+      <button class="tab-btn interactive" onclick="switchRole('Driver')">Driver</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label id="userLabel" for="username">Admin Username / Email</label>
+        <input type="text" class="interactive" id="username" placeholder="Enter credentials" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="interactive" id="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="submit-btn interactive" id="loginBtn">Login as Admin</button>
+    </form>
+
+    <!-- Student Search -->
+    <div class="search-section">
+      <h3 style="font-size: 0.95rem;">Student Directory Search</h3>
+      <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+        Type "Alex" or "Sarah" to preview profile photos:
+      </p>
+      
+      <input 
+        type="text" 
+        class="interactive"
+        id="searchInput" 
+        placeholder="Search student by name..." 
+        oninput="searchStudent()" 
+      />
+
+      <div id="studentResult"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
